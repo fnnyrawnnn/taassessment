@@ -11,12 +11,12 @@
 </div>
 
 @section('scripts')
-    <script type="text/javascript">
-        $('#run_date').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: false
-        })
-    </script>
+<script type="text/javascript">
+    $('#run_date').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm:ss',
+        useCurrent: false
+    })
+</script>
 @endsection
 
 <!-- Is Effective Field -->
@@ -29,7 +29,6 @@
     <label class="radio-inline">
         {!! Form::radio('is_effective', "0", null) !!} No
     </label>
-
 </div>
 
 <!-- Submit Field -->

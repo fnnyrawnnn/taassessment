@@ -13,9 +13,7 @@
             <div class="box-body">
                 <div class="row">
                     {!! Form::open(['route' => 'assignmentHeaders.store']) !!}
-
                         @include('assignment_headers.fields')
-
                     {!! Form::close() !!}
                 </div>
             </div>

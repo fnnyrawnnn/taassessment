@@ -39,4 +39,3 @@
     {!! Form::label('description', 'Description:') !!}
     <p>{{ $company->description }}</p>
 </div>
-

@@ -3,19 +3,19 @@
         <thead>
             <tr>
                 <th>Assessment Session Id</th>
-        <th>Run Counter</th>
-        <th>Run Date</th>
-        <th>Is Effective</th>
+                <th>Run Counter</th>
+                <th>Run Date</th>
+                <th>Is Effective</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($assignmentHeaders as $assignmentHeader)
+            @foreach($assignmentHeaders as $assignmentHeader)
             <tr>
                 <td>{!! $assignmentHeader->assessment_session_id !!}</td>
-            <td>{!! $assignmentHeader->run_counter !!}</td>
-            <td>{!! $assignmentHeader->run_date !!}</td>
-            <td>{!! $assignmentHeader->is_effective !!}</td>
+                <td>{!! $assignmentHeader->run_counter !!}</td>
+                <td>{!! $assignmentHeader->run_date !!}</td>
+                <td>{!! $assignmentHeader->is_effective !!}</td>
                 <td>
                     {!! Form::open(['route' => ['assignmentHeaders.destroy', $assignmentHeader->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
@@ -26,7 +26,7 @@
                     {!! Form::close() !!}
                 </td>
             </tr>
-        @endforeach
+            @endforeach
         </tbody>
     </table>
 </div>

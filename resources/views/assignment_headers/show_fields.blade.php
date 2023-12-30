@@ -12,7 +12,7 @@
 <!-- Run Date Field -->
 <div class="form-group">
     {!! Form::label('run_date', 'Run Date:') !!}
-     {!! $assignmentHeader->run_date !!} 
+    {!! $assignmentHeader->run_date !!} 
 </div>
 
 <!-- Is Effective Field -->

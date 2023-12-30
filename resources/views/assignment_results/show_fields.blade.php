@@ -57,4 +57,3 @@
     {!! Form::label('updated_at', 'Updated At:') !!}
     <p>{!! $assignmentResult->updated_at !!}</p>
 </div>
-

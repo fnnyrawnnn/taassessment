@@ -13,14 +13,9 @@
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('style/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-        <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-      />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Custom styles for this template-->
     <link href="{{asset('style/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
@@ -48,19 +43,16 @@
                                     <form class="user" method="POST" action="{{ url('/login')}}">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user {{$errors->has('email') ? 'is-invalid' : ''}}"
-                                                id="email" aria-describedby="emailHelp" name="email"
-                                                placeholder="Email" value="{{ old('email')}}">
-                                                @if($errors->has('email'))
-                                                <div class="invalid-feedback"> {{ $errors->first('email') }}</div>
+                                            <input type="email" class="form-control form-control-user {{$errors->has('email') ? 'is-invalid' : ''}}" id="email" aria-describedby="emailHelp" name="email" placeholder="Email" value="{{ old('email')}}">
+                                            @if($errors->has('email'))
+                                            <div class="invalid-feedback"> {{ $errors->first('email') }}</div>
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user {{$errors->has('password' ? 'is-invalid' : '')}}"
-                                                id="password" placeholder="Password" name="password">
-                                                @if ($errors->has('password'))
-                                                <div class="invalid-feedback"> {{ $errors->first('password') }}</div>                                                
-                                                @endif
+                                            <input type="password" class="form-control form-control-user {{$errors->has('password' ? 'is-invalid' : '')}}" id="password" placeholder="Password" name="password">
+                                            @if ($errors->has('password'))
+                                            <div class="invalid-feedback"> {{ $errors->first('password') }}</div>
+                                            @endif
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -79,16 +71,16 @@
                                     </div>
                                     {{-- <div class="text-center">
                                         <a class="small" href="{{ url('/register') }}">Registrasi</a>
-                                    </div> --}}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
+
+    </div>
 
     </div>
 
@@ -111,9 +103,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-
-$("#email").each(function(){
-    $(this).click();
-});
-
+    $("#email").each(function () {
+        $(this).click();
+    });
 </script>

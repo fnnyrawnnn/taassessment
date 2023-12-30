@@ -1,36 +1,7 @@
 @extends('main')
 
 @section('title', 'Mapping Participants')
-
 @section('SesiAssessment', 'active')
-@switch(session('permission'))
-    @case('user')
-        @section('user', 'hidden')
-        @section('superadmin', 'hidden')            
-        @section('admin', 'hidden')            
-        @section('admin_pm', 'hidden')            
-        @section('admin_ot', 'hidden')                   
-        @break
-    @case('admin_tnd')
-        @section('superadmin', 'hidden')            
-        @section('admin', 'hidden')            
-        @section('admin_pm', 'hidden')            
-        @section('admin_ap', 'hidden')            
-        @section('admin_ot', 'hidden')            
-        @break
-        @case('admin_ap')
-    @section('superadmin', 'hidden')            
-    @section('admin', 'hidden')            
-    @section('admin_pm', 'hidden')            
-    @section('admin_tnd', 'hidden')            
-    @section('admin_ot', 'hidden')  
-    @break
-    @case('admin')
-        @section('superadmin', 'hidden')                
-            @break
-    @default
-@endswitch
-
 @section('content')
 <input type="hidden" name="_token" id="token" value="">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -310,21 +281,31 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             var dataParticipant = [];
-            var method = {!! json_encode($method) !!};
+            var method = {
+                !!json_encode($method) !!
+            };
 
             // TODO: Refactor the logic on below condition to be same as in the controller
             if (method == "Manual") {
-                var assessor = {!! json_encode($assessor) !!};
-                var assesse = {!! json_encode($assesse) !!};
+                var assessor = {
+                    !!json_encode($assessor) !!
+                };
+                var assesse = {
+                    !!json_encode($assesse) !!
+                };
 
                 var assessor1 = {
                     name: assessor.name,
                     email: assessor.email,
-                    relation: {!! json_encode($relation) !!},
-                    status: {!! json_encode($status) !!}
+                    relation: {
+                        !!json_encode($relation) !!
+                    },
+                    status: {
+                        !!json_encode($status) !!
+                    }
                 }
 
                 var detail = {
@@ -337,7 +318,9 @@
 
                 dataParticipant.push(detail);
             } else if (method == "Upload") {
-                var participants = {!! json_encode($participants) !!}
+                var participants = {
+                    !!json_encode($participants) !!
+                }
 
                 for (var i = 0; i < participants.length; i++) {
                     var assesse = {
@@ -368,7 +351,7 @@
             // END TODO 
 
 
-            $("#add").on("click", function() {
+            $("#add").on("click", function () {
 
                 $("#addParticipant").modal("toggle");
 
@@ -393,7 +376,7 @@
 
             // });
 
-            $(document).on("click", "button.addAssessor", function() {
+            $(document).on("click", "button.addAssessor", function () {
 
                 $("#addAssessor").modal("toggle");
 
@@ -401,7 +384,7 @@
 
             });
 
-            $(document).on("click", "a.deleteAssesse", function() {
+            $(document).on("click", "a.deleteAssesse", function () {
 
                 for (var i = 0; i < dataParticipant.length; i++) {
                     if (dataParticipant[i].id == this.id) {
@@ -415,7 +398,7 @@
                 var tr = document.getElementById("tbody").deleteRow(index);
             });
 
-            $(document).on("click", "a.deleteAssessor", function() {
+            $(document).on("click", "a.deleteAssessor", function () {
 
                 var index = $(this).closest("tr").index();
 
@@ -434,7 +417,7 @@
                 td.find("span").html(count);
             });
 
-            $("#save").on("click", function() {
+            $("#save").on("click", function () {
 
                 var assesse = $("#assesse").val();
                 var assessor = $("#assessor").val();
@@ -452,7 +435,7 @@
                         assesse: assesse,
                         assessor: assessor
                     },
-                    success: function(data) {
+                    success: function (data) {
 
                         html = html.concat("<td>" + data["assesse"].name + "</td><td>" + data["assesse"].email + "</td><td><span class='badge' style='background-color: #4fd6a2;color:#ffffff;'>1</span></td>");
                         html = html.concat('<td><a href="#" class="deleteAssesse" id="' + tr + '"><i class="fa fa-minus-circle" style="color: red; font-size: 20px;"></i></a></td>');
@@ -485,7 +468,7 @@
                 })
             });
 
-            $("#saveAssessor").on("click", function() {
+            $("#saveAssessor").on("click", function () {
 
                 var tr = $(".rowAssesse");
 
@@ -500,7 +483,7 @@
                         assesse: "",
                         assessor: assessor
                     },
-                    success: function(data) {
+                    success: function (data) {
 
                         var html = '<tr class="colAssessor"><td>' + data["assessor"].name + '</td><td>' + data["assessor"].email + '</td><td>' + relationship + '</td><td>' + status + '</td><td><a href="#" class="deleteAssessor" id="' + $("#row_id").val() + '"><i class="fa fa-minus-circle" style="color: red; font-size: 20px;"></i></a></td></tr>';
 
@@ -534,7 +517,7 @@
 
             setHeader($('meta[name="csrf-token"]').attr('content'));
 
-            $("#finalize").on("click", function() {
+            $("#finalize").on("click", function () {
 
                 if (dataParticipant.length > 0) {
                     $.ajax({
@@ -543,7 +526,7 @@
                         data: {
                             data: dataParticipant
                         },
-                        success: function(data) {
+                        success: function (data) {
                             window.location.href = "{{ route('finalize') }}"
                         }
                     })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -27,47 +28,17 @@ class HomeController extends Controller
     {
         $id = Auth::id();
         $role = DB::table('user_role')->where('user_id', $id)->select('role_id')->first();
-        switch ($role->role_id) {
-            case 'superadmin':
-                session(['permission' => 'superadmin']);
-                return view('home');
-                break;
-            
-            case 'admin':
-                session(['permission' => 'admin']);
-                return redirect('employee');
-                break;
-            
-            case 'admin_pm':
-                session(['permission' => 'admin_pm']);
-                return view('home');
-                break;
-            
-            case 'admin_ap':
-                session(['permission' => 'admin_ap']);
-                return redirect('/assessment');
-                break;
-            
-            case 'admin_ot':
-                session(['permission' => 'admin_ot']);
-                return view('home');
-                break;
-            
-            case 'admin_tnd':
-                session(['permission' => 'admin_tnd']);
-                return redirect('training/dashboard');
-
-                break;
-            
-            case 'user':
-                session(['permission' => 'user']);
-                return view('user.index');
-                break;
-            
-            default:
+        if($role->role_id == 'superadmin' || $role->role_id == 'admin' || $role->role_id == 'admin_pm' || $role->role_id == 'admin_ap' || $role->role_id == 'admin_ot' || $role->role_id == 'admin_tnd' || $role->role_id == 'user'){
+            session(['permission' => $role->role_id]);
+            return view('home');
+        } else {
             session(['permission' => 'guest']);
-                return view('welcome');
-                break;
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
     }
 

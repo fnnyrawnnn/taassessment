@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     $company = DB::table('company')->count('name');
-        $employee = User::count('name');
-        return view('welcome')->with([
-            'company' => $company,
-            'employee' => $employee
-        ]);
+    $employee = User::count('name');
+    return view('welcome')->with([
+        'company' => $company,
+        'employee' => $employee
+    ]);
 });
 
 

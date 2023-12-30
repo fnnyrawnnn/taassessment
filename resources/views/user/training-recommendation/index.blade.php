@@ -1,15 +1,6 @@
 @extends('main')
-
 @section('title', 'Training Recommendation')
-
 @section('TrainingRecommendation', 'active')
-
-@section('user', 'hidden')
-@section('superadmin', 'hidden')            
-@section('admin', 'hidden')            
-@section('admin_pm', 'hidden')            
-@section('admin_ot', 'hidden')   
-
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Training Recommendation</h1>
@@ -50,22 +41,22 @@
                                 <td>
                                     @switch($item->status)
                                         @case("Disetujui")
-                                        <div class="setuju">{{ $item->status }}</div>
-                                        @break
+                                            <div class="setuju">{{ $item->status }}</div>
+                                            @break
                                         @case("Menunggu Respon")
-                                        <div class="menunggu">{{ $item->status }}</div>
-                                        @break
+                                            <div class="menunggu">{{ $item->status }}</div>
+                                            @break
                                         @case("Ditolak")
-                                        <div class="ditolak">{{ $item->status }}</div>
-                                        @break
+                                            <div class="ditolak">{{ $item->status }}</div>
+                                            @break
                                         @case("Sedang Berjalan")
-                                        <div class="sedang_berjalan">{{ $item->status }}</div>
-                                        @break
+                                            <div class="sedang_berjalan">{{ $item->status }}</div>
+                                            @break
                                         @case("Selesai")
-                                        <div class="selesai">{{ $item->status }}</div>
-                                        @break
+                                            <div class="selesai">{{ $item->status }}</div>
+                                            @break
                                         @default
-                                        <div class="selesai">{{ $item->status }}</div>
+                                            <div class="selesai">{{ $item->status }}</div>
                                     @endswitch
                                 </td>
                                 <td class="text-center">
