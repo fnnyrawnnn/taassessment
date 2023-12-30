@@ -14,6 +14,7 @@ use App\Models\AssessmentSession;
 use App\Models\Team;
 use App\Models\JobTargets;
 use App\Models\JobRequirement;
+use App\User;
 
 class TeamController extends AppBaseController
 {
@@ -34,10 +35,20 @@ class TeamController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $teams = $this->teamRepository->all();
-
-        return view('teams.index')
-            ->with('teams', $teams);
+        if (session('permission') == "superadmin" || session('permission') == "admin") {
+            $teams = $this->teamRepository->all();
+    
+            return view('teams.index')->with('teams', $teams);
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     /**

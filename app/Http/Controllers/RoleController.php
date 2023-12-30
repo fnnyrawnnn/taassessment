@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
+use App\User;
 
 class RoleController extends Controller
 {
@@ -16,8 +17,19 @@ class RoleController extends Controller
      */
     public function index()
     {
-    $role = DB::table('role')->get();
-    return view('role.index', compact('role'));
+        if (session('permission') == "superadmin") {
+            $role = DB::table('role')->get();
+            return view('role.index', compact('role'));
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     /**

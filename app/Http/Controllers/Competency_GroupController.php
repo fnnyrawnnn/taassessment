@@ -15,6 +15,7 @@ use Flash;
 use Response;
 use DB;
 use Auth;
+use App\User;
 
 class Competency_GroupController extends AppBaseController
 {
@@ -36,49 +37,55 @@ class Competency_GroupController extends AppBaseController
     public function index(Request $request)
     {
 
-        $id = Auth::user()->id;
-        $role = DB::table("user_role")
-        ->where("user_id", $id)
-        ->select("role_id")
-        ->first();
-     
+        if (session('permission') == "superadmin" || session('permission') == 'admin' || session('permission') == 'admin_pm') {
+            $id = Auth::user()->id;
+            $role = DB::table("user_role")
+            ->where("user_id", $id)
+            ->select("role_id")
+            ->first();
 
-        if($role->role_id == "superadmin")
-        {
-            $competencyGroups = $this->competencyGroupRepository->all();
-           
+            if($role->role_id == "superadmin")
+            {
+                $competencyGroups = $this->competencyGroupRepository->all();
+            
 
-            $company_id = Auth::user()->company_id;
-            if ($company_id == null) {
-                $company = Company::all();
-                $selected = "";
-            } else {
-                $company = Company::where('id', $company_id)->get()->first();
-                $selected = $company->id;
-            }
-            return view('competency__groups.index', compact("competencyGroups","company","selected"));
-    
-        }
-        else if($role->role_id == "admin_pm" || $role->role_id == "admin")
-        {   
-            $competencyGroups = Competency_Group::where('company_id', Auth::user()->company_id)
-            ->get();
-
-            $company_id = Auth::user()->company_id;
-            if ($company_id == null) {
-                $company = Company::all();
-                $selected = "";
-            } else {
-                $company = Company::where('id', $company_id)->get()->first();
-                $selected = $company->id;
-            }
-            return view('competency__groups.index', compact("competencyGroups","company","selected"));
-    
-        }
-      
-    
+                $company_id = Auth::user()->company_id;
+                if ($company_id == null) {
+                    $company = Company::all();
+                    $selected = "";
+                } else {
+                    $company = Company::where('id', $company_id)->get()->first();
+                    $selected = $company->id;
+                }
+                return view('competency__groups.index', compact("competencyGroups","company","selected"));
         
-         
+            }
+            else if($role->role_id == "admin_pm" || $role->role_id == "admin")
+            {   
+                $competencyGroups = Competency_Group::where('company_id', Auth::user()->company_id)
+                ->get();
+
+                $company_id = Auth::user()->company_id;
+                if ($company_id == null) {
+                    $company = Company::all();
+                    $selected = "";
+                } else {
+                    $company = Company::where('id', $company_id)->get()->first();
+                    $selected = $company->id;
+                }
+                return view('competency__groups.index', compact("competencyGroups","company","selected"));
+        
+            }
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     public function empCompany($id)

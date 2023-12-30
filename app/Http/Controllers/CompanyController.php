@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
 class CompanyController extends Controller
 {
@@ -14,8 +16,19 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $company = Company::all();
-        return view('company.index', compact('company'));
+        if (session('permission') == "superadmin") {
+            $company = Company::all();
+            return view('company.index', compact('company'));
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     /**

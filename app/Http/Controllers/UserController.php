@@ -24,20 +24,30 @@ class UserController extends AppBaseController
      */
     public function index()
     {
-        $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->get();
-        $company_id = Auth::user()->company_id;
-        
-        if ($company_id == null) {
-            $company = Company::all();
-        $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->get();
-        $selected = "";
+        if (session('permission') == "superadmin" || session('permission') == "admin") {
+            $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->get();
+            $company_id = Auth::user()->company_id;
+            
+            if ($company_id == null) {
+                $company = Company::all();
+            $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->get();
+            $selected = "";
+            } else {
+                $company = Company::where('id', $company_id)->get()->first();
+            $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->where('company.id',$company_id)->get();
+            $selected = $company->id;
+            }
+            return view('employee.index', compact('employee', 'company', 'selected'));
+        } else if (session('permission') != "guest") {
+            return view('home');
         } else {
-            $company = Company::where('id', $company_id)->get()->first();
-        $employee = User::join('user_role', 'user.id', '=', 'user_role.user_id', 'inner')->join('role', 'user_role.role_id', '=', 'role.id')->join('company', 'user.company_id', '=', 'company.id')->select('user.name as name', 'user.employee_id', 'role.name as role_name', 'company.name as company_name', 'user.id as id')->where('company.id',$company_id)->get();
-        $selected = $company->id;
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
-       
-        return view('employee.index', compact('employee', 'company', 'selected'));
     }
 
     /**

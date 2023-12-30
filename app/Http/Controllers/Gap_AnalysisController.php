@@ -13,6 +13,7 @@ use DB;
 use Auth;
 use stdClass;
 use App\Models\Company;
+use App\User;
 
 class Gap_AnalysisController extends AppBaseController
 {
@@ -33,13 +34,14 @@ class Gap_AnalysisController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $id = Auth::user()->id;
+        if (session('permission') == "superadmin" || session('permission') == 'admin' || session('permission') == 'admin_pm') {
+            $id = Auth::user()->id;
 
-        $role = DB::table("user_role")
-                ->where("user_id", $id)
-                ->select("role_id")
-                ->first();
-        
+            $role = DB::table("user_role")
+                    ->where("user_id", $id)
+                    ->select("role_id")
+                    ->first();
+            
             $assessments = DB::table("assessment_session")->get();  
 
             $company_id = Auth::user()->company_id;
@@ -64,7 +66,6 @@ class Gap_AnalysisController extends AppBaseController
                 $selected = $company->id;
             }
             
-        
             for($i = 0; $i < count($assessments); $i++)
             {
                 $participants = DB::table("assessor_map")
@@ -101,12 +102,18 @@ class Gap_AnalysisController extends AppBaseController
 
                 $assessments[$i]->counts = $total; 
             }
-
-
             return view('gap__analyses.index', compact("assessments","company","selected"));
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
-      
-    
+    }    
 
     public function empCompany($id)
     {

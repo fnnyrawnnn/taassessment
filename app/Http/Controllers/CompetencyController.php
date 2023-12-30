@@ -16,6 +16,7 @@ use Flash;
 use Response;
 use DB;
 use Auth;
+use App\User;
 
 
 class CompetencyController extends AppBaseController
@@ -37,14 +38,12 @@ class CompetencyController extends AppBaseController
      */
     public function index(Request $request)
     {
-       
-
+        if (session('permission') == "superadmin" || session('permission') == 'admin' || session('permission') == 'admin_pm') {
             $id = Auth::user()->id;
             $role = DB::table("user_role")
             ->where("user_id", $id)
             ->select("role_id")
             ->first();
-         
     
             if($role->role_id == "superadmin" )
             {
@@ -60,10 +59,7 @@ class CompetencyController extends AppBaseController
                 }
                 return view('competencies.index', compact("competencies","company","selected"));
         
-            }
-            else if($role->role_id == "admin_pm" || $role->role_id == "admin")
-            {   
-             
+            } else if($role->role_id == "admin_pm" || $role->role_id == "admin") {   
                 $competencies = Competency::join('competency_group', 'competency.competency_group_id', 
                 '=', 'competency_group.id')
                 ->where('competency_group.company_id', Auth::user()->company_id)
@@ -81,10 +77,16 @@ class CompetencyController extends AppBaseController
                 return view('competencies.index', compact("competencies","company","selected"));
         
             }
-          
-        
-            
-      
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     public function empCompany($id)

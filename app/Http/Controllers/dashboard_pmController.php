@@ -14,6 +14,7 @@ use Flash;
 use Response;
 use DB;
 use Auth;
+use App\User;
 
 class dashboard_pmController extends AppBaseController
 {
@@ -34,30 +35,57 @@ class dashboard_pmController extends AppBaseController
      */
     public function index(Request $request)
     {
-
-
-        $id = Auth::user()->id;
-        $role = DB::table("user_role")
-        ->where("user_id", $id)
-        ->select("role_id")
-        ->first();
-     
-
-        if($role->role_id == "superadmin")
-        {
-            $competencies = Competency::where('status', 'public')
-            ->orWhere('status', '')
-            ->orWhere('status', null)
-            ->get();
+        if (session('permission') == "superadmin" || session('permission') == 'admin' || session('permission') == 'admin_pm') {
+            $id = Auth::user()->id;
+            $role = DB::table("user_role")
+            ->where("user_id", $id)
+            ->select("role_id")
+            ->first();
     
-            $grupkompetensi = Competency_Group::count('name');
-            $kompetensi = Competency::count('name');
-            $modelkompetensi = Competency_Model::count('name');
-            $kamus = Competency::where('status', 'public')
-            ->orWhere('status', '')
-            ->orWhere('status', null)
-            ->count('name');
+            if($role->role_id == "superadmin")
+            {
+                $competencies = Competency::where('status', 'public')
+                ->orWhere('status', '')
+                ->orWhere('status', null)
+                ->get();
+        
+                $grupkompetensi = Competency_Group::count('name');
+                $kompetensi = Competency::count('name');
+                $modelkompetensi = Competency_Model::count('name');
+                $kamus = Competency::where('status', 'public')
+                ->orWhere('status', '')
+                ->orWhere('status', null)
+                ->count('name');
+        
+                    return view('dashboard_pms.index')->with([
+                        'competencies' => $competencies,
+                        'grupkompetensi' => $grupkompetensi,
+                        'kompetensi' => $kompetensi,
+                        'modelkompetensi' => $modelkompetensi,
+                        'kamus' => $kamus
+                    ]);
+            } else if($role->role_id == "admin_pm" || $role->role_id == "admin") {   
+                $competencies = Competency::where('status', 'public')
+                ->orWhere('status', '')
+                ->orWhere('status', null)
+                ->get();
+        
+                $grupkompetensi = Competency_Group::where('company_id', Auth::user()->company_id)
+                ->count('name');
+                
+                $kompetensi = Competency::join('competency_group', 'competency.competency_group_id', 
+                '=', 'competency_group.id')
+                ->where('competency_group.company_id', Auth::user()->company_id)
+                ->select('competency.*')->count('competency.name');
     
+                $modelkompetensi = Competency_Model::where('company_id', Auth::user()->company_id)
+                ->count('name');
+    
+                $kamus = Competency::where('status', 'public')
+                ->orWhere('status', '')
+                ->orWhere('status', null)
+                ->count('name');
+        
                 return view('dashboard_pms.index')->with([
                     'competencies' => $competencies,
                     'grupkompetensi' => $grupkompetensi,
@@ -65,41 +93,16 @@ class dashboard_pmController extends AppBaseController
                     'modelkompetensi' => $modelkompetensi,
                     'kamus' => $kamus
                 ]);
-
-           
-    
-        }
-        else if($role->role_id == "admin_pm" || $role->role_id == "admin")
-        {   
-            $competencies = Competency::where('status', 'public')
-            ->orWhere('status', '')
-            ->orWhere('status', null)
-            ->get();
-    
-            $grupkompetensi = Competency_Group::where('company_id', Auth::user()->company_id)
-            ->count('name');
-            
-            $kompetensi = Competency::join('competency_group', 'competency.competency_group_id', 
-            '=', 'competency_group.id')
-            ->where('competency_group.company_id', Auth::user()->company_id)
-            ->select('competency.*')->count('competency.name');
-
-            $modelkompetensi = Competency_Model::where('company_id', Auth::user()->company_id)
-            ->count('name');
-
-            $kamus = Competency::where('status', 'public')
-            ->orWhere('status', '')
-            ->orWhere('status', null)
-            ->count('name');
-    
-                return view('dashboard_pms.index')->with([
-                    'competencies' => $competencies,
-                    'grupkompetensi' => $grupkompetensi,
-                    'kompetensi' => $kompetensi,
-                    'modelkompetensi' => $modelkompetensi,
-                    'kamus' => $kamus
-                ]);
-           
+            }
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
     }
 

@@ -200,48 +200,66 @@ class TrainingController extends Controller
 
     public function dashboard()
     {
-        $company_id = Auth::user()->company_id;
-        if($company_id == null){
-            $assessment_session_count = DB::table('assessment_session')->select('status')->where('status','finished')->count();
-            $training_recommnedation_count = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->count();
-            $track_record_count = Track_training_emp::where('status', '=', 'Menunggu')->count();
-            $success_count = Track_project_emp::where('status', '=', 'Selesai')->count();
-            $failed_count = Track_project_emp::where('status', '=', 'Gagal')->count();
-        } else {
-            $assessment_session_count = DB::table('assessment_session')->select('status')->where('status','finished')->where('company_id',$company_id)->count();
-            $training_recommnedation_count = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->where('user.company_id', $company_id)->count();
-            $track_record_count = Track_training_emp::join('user', 'user.id', '=', 'track_training_emps.user_id')->where('status', '=', 'Menunggu')->where('user.company_id','=',$company_id)->count();
-            $success_count = Track_project_emp::join('user', 'user.id', '=', 'track_project_emps.user_id')->where('status', '=', 'Selesai')->where('user.company_id','=',$company_id)->count();
-            $failed_count = Track_project_emp::join('user', 'user.id', '=', 'track_project_emps.user_id')->where('status', '=', 'Gagal')->where('user.company_id','=',$company_id)->count();
-        }
+        if(session('permission') == 'superadmin' || session('permission') == 'admin' || session('permission') == 'admin_tnd'){
+            $company_id = Auth::user()->company_id;
+            if($company_id == null){
+                $assessment_session_count = DB::table('assessment_session')->select('status')->where('status','finished')->count();
+                $training_recommnedation_count = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->count();
+                $track_record_count = Track_training_emp::where('status', '=', 'Menunggu')->count();
+                $success_count = Track_project_emp::where('status', '=', 'Selesai')->count();
+                $failed_count = Track_project_emp::where('status', '=', 'Gagal')->count();
+            } else {
+                $assessment_session_count = DB::table('assessment_session')->select('status')->where('status','finished')->where('company_id',$company_id)->count();
+                $training_recommnedation_count = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->where('user.company_id', $company_id)->count();
+                $track_record_count = Track_training_emp::join('user', 'user.id', '=', 'track_training_emps.user_id')->where('status', '=', 'Menunggu')->where('user.company_id','=',$company_id)->count();
+                $success_count = Track_project_emp::join('user', 'user.id', '=', 'track_project_emps.user_id')->where('status', '=', 'Selesai')->where('user.company_id','=',$company_id)->count();
+                $failed_count = Track_project_emp::join('user', 'user.id', '=', 'track_project_emps.user_id')->where('status', '=', 'Gagal')->where('user.company_id','=',$company_id)->count();
+            }
 
-        return view('training.index')->with([
-            'assessment_count' => $assessment_session_count,
-            'training_count' => $training_recommnedation_count,
-            'track_count' => $track_record_count,
-            'success_count' => $success_count,
-            'failed_count' => $failed_count,
-        ]);
+            return view('training.index')->with([
+                'assessment_count' => $assessment_session_count,
+                'training_count' => $training_recommnedation_count,
+                'track_count' => $track_record_count,
+                'success_count' => $success_count,
+                'failed_count' => $failed_count,
+            ]);
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
     public function recommendation()
     {
         if (Auth::check() == null) {
             return redirect('home')->with('alert', 'Anda harus login terlebih dahulu!');
         }
+        
         if (session('permission') == "admin" || session('permission') == "admin_tnd" || session('permission') == "superadmin") {
             $company_id = Auth::user()->company_id;
             if ($company_id == null) {
                 $training_emp = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->join('training', 'training.id', '=', 'training_emps.id_training')->select('training_emps.status as status', 'user.name as user_name', 'training.*', 'training_emps.id as training_rec_id')->get();
             } else {
-            $training_emp = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->join('training', 'training.id', '=', 'training_emps.id_training')->where('user.company_id', $company_id)->select('training_emps.status as status', 'user.name as user_name', 'training.*', 'training_emps.id as training_rec_id')->get();
+                $training_emp = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->join('training', 'training.id', '=', 'training_emps.id_training')->where('user.company_id', $company_id)->select('training_emps.status as status', 'user.name as user_name', 'training.*', 'training_emps.id as training_rec_id')->get();
             }
-        // dd($training_emp);
-
             return view('training.recommendation')->with('training_emp', $training_emp);
-        } else {
+        } else if (session('permission') == 'user'){
             $training_emp = Training_emp::join('user', 'user.id', '=', 'training_emps.user_id')->join('training', 'training.id', '=', 'training_emps.id_training')->select('training_emps.status as status', 'user.name as user_name', 'training.*', 'training_emps.id as training_rec_id')->where('training_emps.user_id', Auth::user()->id)->get();
-            // dd($training_emp);
             return view('user.training-recommendation.index')->with('training_emp', $training_emp);
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
     }
 

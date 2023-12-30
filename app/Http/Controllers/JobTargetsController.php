@@ -11,6 +11,8 @@ use Flash;
 use Response;
 use App\Models\Team;
 use App\Models\AssessmentSession;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
 class JobTargetsController extends AppBaseController
 {
@@ -31,10 +33,21 @@ class JobTargetsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $teams = Team::all();
-        $jobTargets = $this->jobTargetsRepository->all();
-
-        return view('job_targets.index',compact('jobTargets','teams'));
+        if (session('permission') == "superadmin" || session('permission') == "admin") {
+            $teams = Team::all();
+            $jobTargets = $this->jobTargetsRepository->all();
+    
+            return view('job_targets.index',compact('jobTargets','teams'));
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     /**

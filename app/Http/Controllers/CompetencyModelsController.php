@@ -12,6 +12,8 @@ use Response;
 use App\Models\CompetencyModels;
 use Session;
 use Auth;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
 class CompetencyModelsController extends AppBaseController
 {
@@ -32,10 +34,19 @@ class CompetencyModelsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $competencyModels = $this->competencyModelsRepository->all();
-
-        return view('competency_models.index')
-            ->with('competencyModels', $competencyModels);
+        if (session('permission') == "superadmin" || session('permission') == 'admin' || session('permission') == 'admin_pm') {
+            $competencyModels = $this->competencyModelsRepository->all();
+            return view('competency_models.index')->with('competencyModels', $competencyModels);
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
+        }
     }
 
     /**

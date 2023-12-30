@@ -20,9 +20,11 @@ class TrackRecordController extends Controller
         if (Auth::check() == null) {
             return redirect('home')->with('alert', 'Anda harus login terlebih dahulu!');
         }
+
         $id = Auth::id();
         $company_id = Auth::user()->company_id;
         $period = DB::table('track_input_period')->where('company_id', $company_id)->get()->first();
+
         if ($period == null) {
             $period = (object) [
                 'start_date' => 'Belum ditentukan',
@@ -41,10 +43,19 @@ class TrackRecordController extends Controller
             $employee = User::join('user_role', 'user_role.user_id', '=', 'user.id', 'inner')->where('user_role.role_id', '=', 'user')->get();
             $company = Company::all();
             return view('track-record.index', compact('employee'))->with('period', $period)->with('company', $company);
-        } else {
+        } else if (session('permission') == "admin" || session('permission') == "admin_tnd"){
             $employee = User::join('user_role', 'user_role.user_id', '=', 'user.id', 'inner')->where('user_role.role_id', '=', 'user')->where('user.company_id',$company_id)->get();
             $company = Company::where('id', $company_id)->get();
             return view('track-record.index', compact('employee'))->with('period', $period)->with('company', $company);
+        } else if (session('permission') != "guest") {
+            return view('home');
+        } else {
+            $company = DB::table('company')->count('name');
+            $employee = User::count('name');
+            return view('welcome')->with([
+                'company' => $company,
+                'employee' => $employee
+            ]);
         }
     }
 

@@ -120,6 +120,7 @@ Route::resource('teams', 'TeamController');
 //     Mail::to('email@email.com')->send(new TrainingRecommendationMail());
 //     return new TrainingRecommendationMail();
 // });
+
 Route::resource('company', 'CompanyController');
 Route::resource('role', 'RoleController');
 
