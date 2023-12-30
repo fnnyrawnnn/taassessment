@@ -343,155 +343,152 @@ class Gap_AnalysisController extends AppBaseController
                 ->first();
 
       
-            $id = request("id");
-            $id = explode("-", $id);
+        $id = request("id");
+        $id = explode("-", $id);
 
-            $assesse_id = $id[0];
-            $session_id = $id[1];
-            $job_target = [];
-            $pm = 2;
+        $assesse_id = $id[0];
+        $session_id = $id[1];
+        $job_target = [];
+        $pm = 2;
 
-            $result = DB::table("assessment_competency_result")
-            ->join("competency", "competency.id", "=", "assessment_competency_result.competency_id")
-            ->join("job_target", "job_target.assessment_session_id", "=",
-            "assessment_competency_result.session_id")
-            ->join("job_requirement", "job_requirement.job_target_id", "=", "job_target.id")
-            ->where("session_id", $session_id)
-            ->where("userid_assessee", $assesse_id)
-            ->where("job_target.job_name", "Project Manager")
-            ->select("competency.name as competency_name", "competency.id as competency_id",
-             "modus_level as hasil", "median_level",
-            "third_quartile", "job_target.job_name as job_name", "job_target.id as job_id", "max_level",
-            "job_requirement.skill_level as req")
-            ->distinct("competency.id")
-            ->get();
-           
-           
-            $job_name = 'Project Manager';
-            $jenis = 'core';
-            $coba = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis.'" 
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name.'" AND b.job_target_id = d.id');
+        $result = DB::table("assessment_competency_result")
+        ->join("competency", "competency.id", "=", "assessment_competency_result.competency_id")
+        ->join("job_target", "job_target.assessment_session_id", "=",
+        "assessment_competency_result.session_id")
+        ->join("job_requirement", "job_requirement.job_target_id", "=", "job_target.id")
+        ->where("session_id", $session_id)
+        ->where("userid_assessee", $assesse_id)
+        ->where("job_target.job_name", "Project Manager")
+        ->select("competency.name as competency_name", "competency.id as competency_id",
+            "modus_level as hasil", "median_level",
+        "third_quartile", "job_target.job_name as job_name", "job_target.id as job_id", "max_level",
+        "job_requirement.skill_level as req")
+        ->distinct("competency.id")
+        ->get();
+        
+        
+        $job_name = 'Project Manager';
+        $jenis = 'core';
+        $coba = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis.'" 
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name.'" AND b.job_target_id = d.id');
 
-            $job_name = 'Project Manager';
-            $jenis2 = 'secondary';
-            $cobaa = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'" 
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name.'" AND b.job_target_id = d.id');
+        $job_name = 'Project Manager';
+        $jenis2 = 'secondary';
+        $cobaa = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'" 
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name.'" AND b.job_target_id = d.id');
 
-            $job_name2 = 'Programmer';
-            $jenis = 'core';
-            $coba2 = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis.'" 
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name2.'" AND b.job_target_id = d.id');
+        $job_name2 = 'Programmer';
+        $jenis = 'core';
+        $coba2 = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis.'" 
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name2.'" AND b.job_target_id = d.id');
 
-            $job_name2 = 'Programmer';
-            $jenis2 = 'secondary';
-            $cobaa2 = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'" 
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name2.'" AND b.job_target_id = d.id');
+        $job_name2 = 'Programmer';
+        $jenis2 = 'secondary';
+        $cobaa2 = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.' 
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'" 
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name2.'" AND b.job_target_id = d.id');
 
-            $job_name3 = 'Analis';
-            $jenis = 'core';
-            $coba3 = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.'
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis.'"  
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name3.'" AND b.job_target_id = d.id');
+        $job_name3 = 'Analis';
+        $jenis = 'core';
+        $coba3 = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.'
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis.'"  
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name3.'" AND b.job_target_id = d.id');
 
-            $job_name3 = 'Analis';
-            $jenis2 = 'secondary';
-            $cobaa3 = DB::select('SELECT DISTINCT c.name as 
-            `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
-            a.modus_level as `hasil` FROM assessment_competency_result a, 
-            job_requirement b, competency c, job_target d WHERE 
-            a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.'
-            AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'"  
-            AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
-            d.job_name = "'.$job_name3.'" AND b.job_target_id = d.id');
-          
-            $session = DB::table("assessment_session")
-                        ->where("id", $session_id)
-                        ->select("name", "start_date")
-                        ->first();
+        $job_name3 = 'Analis';
+        $jenis2 = 'secondary';
+        $cobaa3 = DB::select('SELECT DISTINCT c.name as 
+        `kompetensi`, c.jenis as `jenis`, b.skill_level as `req`, 
+        a.modus_level as `hasil` FROM assessment_competency_result a, 
+        job_requirement b, competency c, job_target d WHERE 
+        a.competency_id = b.competency_id AND userid_assessee = '.$assesse_id.'
+        AND c.id = a.competency_id AND c.jenis = "'.$jenis2.'"  
+        AND c.id = a.competency_id AND a.session_id = '.$session_id.' AND 
+        d.job_name = "'.$job_name3.'" AND b.job_target_id = d.id');
+
+        $session = DB::table("assessment_session")
+                    ->where("id", $session_id)
+                    ->select("name", "start_date")
+                    ->first();
+        
+        $assessee = DB::table("user")
+                    ->where("id", $assesse_id)
+                    ->select("name", "employee_id")
+                    ->first();   
+                    
+
+
+        $job = DB::table("job_target")
+                ->where("assessment_session_id", $session_id)
+                ->select("id", "job_name")
+                ->distinct('job_name')
+                ->get();
+
+        $jobs = [];
+        $req = [];
+        
+        for($i = 0; $i < count($job); $i++)
+        {
+            $detail = new stdClass();
+            $detail->job_name = $job[$i]->job_name;
             
-            $assessee = DB::table("user")
-                        ->where("id", $assesse_id)
-                        ->select("name", "employee_id")
-                        ->first();   
-                        
-          
-
-            $job = DB::table("job_target")
-                    ->where("assessment_session_id", $session_id)
-                    ->select("id", "job_name")
-                    ->distinct('job_name')
+            $req = DB::table("job_requirement")
+                    ->join("competency", "competency.id", "=", "job_requirement.competency_id")
+                    ->join("job_target", "job_target.id", "=", "job_requirement.job_target_id")
+                    ->where("job_target.job_name", "project manager")
+                    ->select("competency_id", "name", "skill_level as level", "job_target.job_name as job")
+                    ->distinct('job_target.job_name')
                     ->get();
 
-            $jobs = [];
-            
-            for($i = 0; $i < count($job); $i++)
+            $detail->req = $req;
+            $detail->result = [];
+
+            array_push($jobs, $detail);
+        }
+
+        
+        for($i = 0; $i < count($jobs); $i++)
+        {
+            for($j = 0; $j < count($jobs[$i]->req); $j++)
             {
-                $detail = new stdClass();
-                $detail->job_name = $job[$i]->job_name;
-                
-                $req = DB::table("job_requirement")
-                        ->join("competency", "competency.id", "=", "job_requirement.competency_id")
-                        ->join("job_target", "job_target.id", "=", "job_requirement.job_target_id")
-                        ->where("job_target.job_name", "project manager")
-                        ->select("competency_id", "name", "skill_level as level", "job_target.job_name as job")
-                        ->distinct('job_target.job_name')
-                        ->get();
-
-                        
-                
-                $detail->req = $req;
-                $detail->result = [];
-
-                array_push($jobs, $detail);
-            }
-
-            
-            for($i = 0; $i < count($jobs); $i++)
-            {
-                for($j = 0; $j < count($jobs[$i]->req); $j++)
+                for($k = 0; $k < count($result); $k++)
                 {
-                    for($k = 0; $k < count($result); $k++)
+                    if($jobs[$i]->req[$j]->competency_id == $result[$k]->competency_id)
                     {
-                        if($jobs[$i]->req[$j]->competency_id == $result[$k]->competency_id)
-                        {
-                            array_push($jobs[$i]->result, $result[$k]);
-                        }
+                        array_push($jobs[$i]->result, $result[$k]);
                     }
                 }
             }
-
-            return view('gap__analyses.gap', compact("result", "coba", "coba2",
-            "coba3", "assessee", "session", "jobs", "job", "req", "cobaa3", "cobaa2", "cobaa"));
         }
-        
-    }
 
+        return view('gap__analyses.gap', compact("result", "coba", "coba2",
+        "coba3", "assessee", "session", "jobs", "job", "req", "cobaa3", "cobaa2", "cobaa"));
+    }  
+}

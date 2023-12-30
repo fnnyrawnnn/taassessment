@@ -78,7 +78,7 @@ class UserController extends AppBaseController
     {
         $request->validate([
             'employee_id' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:user',
             'name' => 'required',
             'username' => 'required',
             'password' => 'required',
@@ -165,7 +165,7 @@ class UserController extends AppBaseController
         $user = User::where('id', $id)->get()->first();
         $request->validate([
             'employee_id' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:user',
             'name' => 'required',
             'username' => 'required',
         ], [
@@ -239,5 +239,5 @@ class UserController extends AppBaseController
         }
         $role = DB::table('role')->where('id', '!=', 'user')->where('id', '!=', 'superadmin')->get();
         return view('employee.create-admin', compact('company', 'role'));
-    }
+    }           
 }

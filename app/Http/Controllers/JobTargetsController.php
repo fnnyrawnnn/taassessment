@@ -13,6 +13,8 @@ use App\Models\Team;
 use App\Models\AssessmentSession;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use Auth;
+use App\Models\JobTargets;
 
 class JobTargetsController extends AppBaseController
 {
@@ -34,9 +36,27 @@ class JobTargetsController extends AppBaseController
     public function index(Request $request)
     {
         if (session('permission') == "superadmin" || session('permission') == "admin") {
-            $teams = Team::all();
-            $jobTargets = $this->jobTargetsRepository->all();
-    
+            $teams = new Team();
+            $jobTargets = new JobTargets();
+
+            if(session('permission') == 'admin'){
+                $teams = $teams->whereIn('assessment_session_id', function ($query) {
+                    $query->select('assessment_session_id')
+                        ->from('assessment_session')
+                        ->where('company_id', Auth::user()->company_id);
+                })->orWhereNull('assessment_session_id')->get();
+
+                
+                $jobTargets = $jobTargets->whereIn('assessment_session_id', function ($query) {
+                    $query->select('assessment_session_id')
+                        ->from('assessment_session')
+                        ->where('company_id', Auth::user()->company_id);
+                })->orWhereNull('assessment_session_id')->get();
+            } else {
+                $teams = $teams->all();
+                $jobTargets = $jobTargets->all();
+            }
+
             return view('job_targets.index',compact('jobTargets','teams'));
         } else if (session('permission') != "guest") {
             return view('home');

@@ -15,6 +15,7 @@ use App\Models\Team;
 use App\Models\JobTargets;
 use App\Models\JobRequirement;
 use App\User;
+use Auth;
 
 class TeamController extends AppBaseController
 {
@@ -36,6 +37,19 @@ class TeamController extends AppBaseController
     public function index(Request $request)
     {
         if (session('permission') == "superadmin" || session('permission') == "admin") {
+
+            $teams = new Team();
+
+            if(session('permission') == 'admin'){
+                $teams = $teams->whereIn('assessment_session_id', function ($query) {
+                    $query->select('assessment_session_id')
+                        ->from('assessment_session')
+                        ->where('company_id', Auth::user()->company_id);
+                })->orWhereNull('assessment_session_id')->get();
+            } else {
+                $teams = $teams->all();
+            }
+
             $teams = $this->teamRepository->all();
     
             return view('teams.index')->with('teams', $teams);

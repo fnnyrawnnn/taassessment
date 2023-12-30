@@ -189,8 +189,8 @@ class Assessment_SessionController extends AppBaseController
                     
                     $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
 
-                    $assessor->name = $assesor->name;
-                    $assessor->email = $assesor->email;
+                    $assessor->name = $assesor->name ? $assesor->name : '';
+                    $assessor->email = $assesor->email ? $assesor->email : '';
                     $assessor->status = $participant[$j]->status;
                     $assessor->relation = $participant[$j]->relation;
 
@@ -223,7 +223,7 @@ class Assessment_SessionController extends AppBaseController
      */
     public function edit($id)
     {
-       $assessmentSession = DB::table("assessment_session")
+        $assessmentSession = DB::table("assessment_session")
                             ->where("id", $id)
                             ->first();
 
@@ -271,8 +271,8 @@ class Assessment_SessionController extends AppBaseController
                     
                     $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
 
-                    $assessor->name = $assesor->name;
-                    $assessor->email = $assesor->email;
+                    $assessor->name = $assesor->name ? $assesor->name : '';
+                    $assessor->email = $assesor->email ? $assesor->email : '';
                     $assessor->status = $participant[$j]->status;
                     $assessor->relation = $participant[$j]->relation;
                     $assessor->assessor_map = $participant[$j]->id;
@@ -291,8 +291,6 @@ class Assessment_SessionController extends AppBaseController
             $modelss = CompetencyModels::where('company_id', $user_company)->get();
             $id = DB::table('user')->select("employee_id")->where('company_id', $user_company)->get();
         }
-
-      
 
         return view('assessment__sessions.edit', compact("assessmentSession", "models", "participants", "modelss", "id", "assessmentId"));
     }
