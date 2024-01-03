@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
-use DB;
+// use Auth;
+// use DB;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
+use Illuminate\Support\Facades\DB;
+
 
 class assessmentUserController extends Controller
 {
@@ -25,7 +28,7 @@ class assessmentUserController extends Controller
                     ->where("assessor_map.userid_assessor", $id)
                     ->orWhere(function($query){
                             $query->where("assessor_map.userid_assessee", Auth::user()->id) 
-                                  ->where("assessor_map.userid_assessor", Auth::user()->id);               
+                                    ->where("assessor_map.userid_assessor", Auth::user()->id);               
                     })
                     ->distinct()        
                     ->select("assessment_session.*", "assessor_map.session_id")                        
@@ -114,7 +117,7 @@ class assessmentUserController extends Controller
             $id = Auth::user()->id;
 
             $assessee = [];
-                   
+                
             for($i = 0; $i < count($participants); $i++)
             {
                 array_push($assessee, $participants[$i]->userid_assessee);

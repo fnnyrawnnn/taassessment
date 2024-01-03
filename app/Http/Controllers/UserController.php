@@ -14,6 +14,8 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
 
 class UserController extends AppBaseController
 {
@@ -77,11 +79,11 @@ class UserController extends AppBaseController
     public function store(Request $request)
     {
         $request->validate([
-            'employee_id' => 'required',
-            'email' => 'required|unique:user',
-            'name' => 'required',
-            'username' => 'required',
-            'password' => 'required',
+            'employee_id' => ['required', 'string'],
+            'email' => ['required', 'string', 'min:3', 'email', 'unique:user'],
+            'name' => ['required', 'string', 'min:3'],
+            'username' => ['required', 'string', 'min:3'],
+            'password' => ['required', 'string', 'min:8'],
         ], [
             'employee_id.required' => 'Employee ID tidak boleh kosong',
             'email.required' => 'Email Pegawai tidak boleh kosong',
@@ -164,10 +166,11 @@ class UserController extends AppBaseController
     {
         $user = User::where('id', $id)->get()->first();
         $request->validate([
-            'employee_id' => 'required',
-            'email' => 'required|unique:user',
-            'name' => 'required',
-            'username' => 'required',
+            'employee_id' => ['required', 'string'],
+            'email' => ['required', 'string', 'min:3', 'email', Rule::unique('user')->ignore($id ?? null)],
+            'name' => ['required', 'string', 'min:3'],
+            'username' => ['required', 'string', 'min:3'],
+            'password' => ['required', 'string', 'min:8'],
         ], [
             'employee_id.required' => 'Employee ID tidak boleh kosong',
             'email.required' => 'Email Pegawai tidak boleh kosong',

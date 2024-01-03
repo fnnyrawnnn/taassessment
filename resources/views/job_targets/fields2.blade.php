@@ -1,4 +1,4 @@
-<!-- Assessment Session Id Field -->
+{{-- <!-- Assessment Session Id Field -->
 <h1 class="d-inline h3 text-gray-800" style="margin-bottom: 20px;">Add Session and Teams</h1>
 <div class="form-group">
     {!! Form::label('assessment_session_id', 'Assessment Session:') !!}
@@ -8,7 +8,7 @@
 <div class="form-group">
     {!! Form::label('team_id', 'Team:') !!}
     {!! Form::select('team_id', $teams, null, ['class' => 'form-control', 'placeholder' => '- Select Team -']) !!}
-</div>
+</div> --}}
 
 <h1 class="d-inline h3 text-gray-800" style="margin-bottom: 20px;">Edit Job Target</h1>
 

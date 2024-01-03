@@ -13,7 +13,7 @@ use App\Models\Team;
 use App\Models\AssessmentSession;
 use Illuminate\Support\Facades\DB;
 use App\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\JobTargets;
 
 class JobTargetsController extends AppBaseController
@@ -136,10 +136,7 @@ class JobTargetsController extends AppBaseController
             return redirect(route('jobTargets.index'));
         }
 
-        $sessions = AssessmentSession::pluck('name','id');
-        $teams = Team::pluck('name','id');
-
-        return view('job_targets.edit', compact('jobTargets','teams','sessions'));
+        return view('job_targets.edit', compact('jobTargets'));
     }
 
     /**
@@ -189,6 +186,55 @@ class JobTargetsController extends AppBaseController
         $this->jobTargetsRepository->delete($id);
 
         Flash::success('Job Targets deleted successfully.');
+
+        return redirect(route('jobTargets.index'));
+    }
+
+        /**
+     * Show the form for editing the specified JobTargets.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+
+    public function ongoing($id)
+    {
+        $jobTargets = $this->jobTargetsRepository->find($id);
+
+        if (empty($jobTargets)) {
+            Flash::error('Job Targets not found');
+
+            return redirect(route('jobTargets.index'));
+        }
+
+        $sessions = AssessmentSession::pluck('name','id');
+        $teams = Team::pluck('name','id');
+
+        return view('job_targets.addongoing', compact('jobTargets','teams','sessions'));
+    }
+
+        /**
+     * Update the specified JobTargets in storage.
+     *
+     * @param int $id
+     * @param UpdateJobTargetsRequest $request
+     *
+     * @return Response
+     */
+    public function addongoing($id, UpdateJobTargetsRequest $request)
+    {
+        $jobTargets = $this->jobTargetsRepository->find($id);
+
+        if (empty($jobTargets)) {
+            Flash::error('Job Targets not found');
+
+            return redirect(route('jobTargets.index'));
+        }
+
+        $jobTargets = $this->jobTargetsRepository->update($request->all(), $id);
+
+        Flash::success('Job Targets updated successfully.');
 
         return redirect(route('jobTargets.index'));
     }

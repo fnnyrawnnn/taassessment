@@ -9,13 +9,16 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
-use DB;
+// use DB;
 use App\Models\AssessmentSession;
 use App\Models\Team;
 use App\Models\JobTargets;
 use App\Models\JobRequirement;
 use App\User;
-use Auth;
+// use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class TeamController extends AppBaseController
 {
@@ -34,7 +37,7 @@ class TeamController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index()
     {
         if (session('permission') == "superadmin" || session('permission') == "admin") {
 

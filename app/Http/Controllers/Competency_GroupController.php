@@ -13,8 +13,10 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
-use DB;
-use Auth;
+// use DB;
+use Illuminate\Support\Facades\DB;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 
 class Competency_GroupController extends AppBaseController

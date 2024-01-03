@@ -68,7 +68,7 @@ class Key_BehaviourController extends AppBaseController
 
         Flash::success('Key  Behaviour saved successfully.');
 
-        return redirect(route('competencies.show', $keyBehaviour->competency_id));
+        return redirect(route('competencies.showkey', $keyBehaviour->competency_id));
     }
 
     /**
@@ -112,7 +112,7 @@ class Key_BehaviourController extends AppBaseController
         }
 
         return view('key__behaviours.edit', compact('keyBehaviour', 'competency_id', 'levels', 'competencies'));
-      
+    
     }
 
     /**
@@ -137,7 +137,7 @@ class Key_BehaviourController extends AppBaseController
 
         Flash::success('Key  Behaviour updated successfully.');
 
-        return redirect(route('competencies.show', $keyBehaviour->competency_id));
+        return redirect(route('competencies.showkey', $keyBehaviour->competency_id));
     }
 
     /**
@@ -163,7 +163,7 @@ class Key_BehaviourController extends AppBaseController
 
         Flash::success('Key  Behaviour deleted successfully.');
 
-        return redirect(route('competencies.show', $keyBehaviour->competency_id));
+        return redirect(route('competencies.showkey', $keyBehaviour->competency_id));
         
     }
 }

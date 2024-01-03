@@ -58,12 +58,12 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3',
-            'host' => 'required|min:3',
-            'duration' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'description' => 'required|min:3',
+            'name' => ['required', 'string', 'min:3'],
+            'host' => ['required', 'string', 'min:3'],
+            'duration' => ['required', 'string'],
+            'start_date' => ['required', 'string'],
+            'end_date' => ['required', 'string'],
+            'description' => ['required', 'string', 'min:3'],
 
         ], [
             'name.required' => 'Nama pelatihan tidak boleh kosong',
@@ -149,12 +149,12 @@ class TrainingController extends Controller
     public function update(Request $request, Training $training)
     {
         $request->validate([
-            'name' => 'required|min:3',
-            'host' => 'required|min:3',
-            'duration' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'description' => 'required|min:3',
+            'name' => ['required', 'string', 'min:3'],
+            'host' => ['required', 'string', 'min:3'],
+            'duration' => ['required', 'string'],
+            'start_date' => ['required', 'string'],
+            'end_date' => ['required', 'string'],
+            'description' => ['required', 'string', 'min:3'],
 
         ], [
             'name.required' => 'Nama pelatihan tidak boleh kosong',

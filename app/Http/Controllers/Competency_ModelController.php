@@ -13,9 +13,10 @@ use App\Models\Competency_Relation;
 use App\Models\Competency;
 use App\Models\Company;
 use App\Models\Competency_Model;
-use DB;
-use Auth;
-
+// use DB;
+// use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class Competency_ModelController extends AppBaseController
 {
     /** @var  Competency_ModelRepository */
@@ -125,7 +126,7 @@ class Competency_ModelController extends AppBaseController
     {
         $input = $request->all();
 
-        $competencyModel = $this->competencyModelRepository->create($input);
+        $this->competencyModelRepository->create($input);
 
         Flash::success('Competency  Model saved successfully.');
 
@@ -165,7 +166,6 @@ class Competency_ModelController extends AppBaseController
 
         return view('competency__models.show', compact('competencyModel','items', 'competencies'));
     }
-
 
     /**
      * Show the form for editing the specified Competency_Model.

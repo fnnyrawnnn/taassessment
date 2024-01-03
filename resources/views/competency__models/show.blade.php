@@ -19,7 +19,6 @@
                         <th>No</th>
                         <th>Kode</th>
                         <th>Nama</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,42 +28,13 @@
                         <td>{{ $no++}}</td>
                         <td>{!! $competency->code !!}</td>
                         <td>{!! $competency->name !!}</td>
-                        <td>
-                            <form method="POST" action="/competencyModels/{{ $competencyModel->id }}/competencies/{{ $competency->id }}">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><span class="iconify" data-icon="bi:trash" data-inline="false"></span></button>
-                            </form>
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         <br>
-    </div>
-</div>
-<div class="card">
-    <div class="card-body">
-        <h4 style="margin-left:-12px">Tambah Kompetensi</h4>
-
-    </div>
-    <div class="block-content">
-        <form method="post" action="{{ route("addCompetency",$competencyModel) }}">
-            @csrf
-            <div class="form-group col-sm-12">
-                <label>Kompetensi:</label>
-                <select class="js-example-basic-multiple form-control" name="competency[]" multiple="multiple">
-                    @foreach ($competencies as $item)
-                    <option value="{{$item->id}}">{{$item->code}} - {{$item->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group col-sm-6">
-                {!! Form::submit('Tambah', ['class' => 'btn btn-primary']) !!}
-
-            </div>
-        </form>
+    <a href="{{ route('competencyModels.index') }}" class="btn btn-danger">Back</a>
     </div>
 </div>
 

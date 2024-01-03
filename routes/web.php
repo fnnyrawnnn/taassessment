@@ -34,6 +34,10 @@ Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::resource('jobTargets', 'JobTargetsController');
 
+//add ongoing
+Route::get("/jobTargets/ongoing/{id}", "JobTargetsController@ongoing")->name("ongoing.job");
+Route::patch("/jobTargets/ongoing/add/{id}", "JobTargetsController@addongoing")->name("add.ongoing.job");
+
 Route::resource('roles', 'rolesController');
 
 Route::resource('users', 'UserController');
@@ -134,6 +138,9 @@ Route::resource('gapAnalyses', 'Gap_AnalysisController');
 Route::resource('company', 'CompanyController');
 Route::resource('role', 'RoleController');
 
+// key behaviour competencies
+Route::get("/competencies/key/{id}", "CompetencyController@showkey")->name("competencies.showkey");
+
 Route::resource('assignmentResults', 'AssignmentResultController');
 
 Route::resource('assignmentHeaders', 'AssignmentHeaderController');
@@ -145,6 +152,7 @@ Route::get('gap/company/{id}', 'Gap_AnalysisController@empCompany');
 Route::post('gap/partisipan', 'Gap_AnalysisController@show')->name('gap.show')->middleware('auth');
 Route::post("gap/partisipan/detail", "Gap_AnalysisController@gap")->name("gap/partisipan/detail")->middleware("auth");
 Route::delete('/competencyModels/{competencyModel}/competencies/{competency}', 'CompetencyRelationController@destroy');
-Route::post("/competencyModels/{Competency_id}/competency", "CompetencyRelationController@addCompetency")->name("addCompetency");
+Route::get("/competencyModels/add/{Competency_id}", "CompetencyRelationController@create")->name("add.competencies");
+Route::post("/competencyModels/add/{Competency_id}/competency", "CompetencyRelationController@addCompetency")->name("addCompetency");
 
 Route::get('/teams/duplicate/{id}', 'TeamController@duplicate')->name('teams.duplicate');

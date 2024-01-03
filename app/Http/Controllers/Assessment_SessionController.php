@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
 use App\Models\CompetencyModels;
 use Flash;
 use Response;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 use App\Models\Assessment_Session;
 use App\Models\AssessmentSession;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 
 class Assessment_SessionController extends AppBaseController
@@ -114,6 +114,16 @@ class Assessment_SessionController extends AppBaseController
         // $assessmentSession = $this->assessmentSessionRepository->create($input);
 
         // Flash::success('Assessment  Session saved successfully.');
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:64'],
+            'category' => ['required', 'string', 'max:50'],
+            'status' => ['required', 'string', 'max:32'],
+            'expired' => ['required', 'string', 'max:50'],
+            'start_date' => ['required'],
+            'end_date' => ['required'],
+            'company_id' => ['required', 'numeric'],
+        ]);
 
         $assesment = new Assessment_Session([
             "name" => $request->name,
@@ -301,7 +311,7 @@ class Assessment_SessionController extends AppBaseController
         $id = $request->id;
         $assessment = $request->assessment;
 
-        $update = DB::table("assessment_session")
+        DB::table("assessment_session")
             ->where("id", $id)
             ->update(["name" => $assessment["name"], "category" => $assessment["category"], 
                         "status" => $assessment["status"], "expired" => $assessment["expired"], 

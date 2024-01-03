@@ -14,8 +14,10 @@ use App\Models\Job_Target;
 use App\Models\Company;
 use Flash;
 use Response;
-use DB;
-use Auth;
+// use DB;
+use Illuminate\Support\Facades\DB;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 
 
@@ -102,7 +104,7 @@ class CompetencyController extends AppBaseController
         return view('competencies.index', compact('competencies', 'company', 'selected'));
     }
 
-       
+
 
     /**
      * Show the form for creating a new Competency.
@@ -171,9 +173,20 @@ class CompetencyController extends AppBaseController
         }
 
         return view('competencies.show', compact('competency','behaviour','job', 'req'));
+    }
 
+    public function showkey($id)
+    {
+        $competency = $this->competencyRepository->find($id);
+        $behaviour = Key_Behaviour::all()->where('competency_id', $id);
 
-      
+        if (empty($competency)) {
+            Flash::error('Competency not found');
+
+            return redirect(route('competencies.index'));
+        }
+
+        return view('competencies.detailbehaviour', compact('competency','behaviour'));
     }
 
     /**
@@ -197,7 +210,7 @@ class CompetencyController extends AppBaseController
         return view('competencies.edit', compact('competencyGroup','competency'));
     }
 
-   
+
 
 
     /**

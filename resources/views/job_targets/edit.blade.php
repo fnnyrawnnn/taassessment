@@ -14,7 +14,7 @@
         </div>
     </div>
 
-   <div class="card shadow mb-4">
+    <div class="card shadow mb-4">
         <div class="card-body">
         {!! Form::model($jobTargets, ['route' => ['jobTargets.update', $jobTargets->id], 'method' => 'patch']) !!}
 

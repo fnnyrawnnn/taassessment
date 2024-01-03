@@ -6,6 +6,7 @@ use App\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
@@ -51,12 +52,12 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3',
-            'address' => 'required|min:3',
-            'telp' => 'required|min:3',
-            'email' => 'required|min:3',
-            'description' => 'required|min:3',
-            'contact_person' => 'required|min:3',
+            'name' => ['required', 'string', 'min:3'],
+            'address' => ['required', 'string', 'min:3'],
+            'telp' => ['required', 'numeric', 'min:3'],
+            'email' => ['required', 'string', 'min:3', 'email', 'unique:company'],
+            'description' => ['required', 'min:3'],
+            'contact_person' => ['required', 'numeric', 'min:3'],
         ], [
             'name.required' => 'Nama Perusahaan tidak boleh kosong',
             'address.required' => 'Alamat tidak boleh kosong',
@@ -103,12 +104,12 @@ class CompanyController extends Controller
     public function update(Request $request, Company $company)
     {
         $request->validate([
-            'name' => 'required|min:3',
-            'address' => 'required|min:3',
-            'telp' => 'required|min:3',
-            'email' => 'required|min:3',
-            'description' => 'required|min:3',
-            'contact_person' => 'required|min:3',
+            'name' => ['required', 'string', 'min:3'],
+            'address' => ['required', 'string', 'min:3'],
+            'telp' => ['required', 'numeric', 'min:3'],
+            'email' => ['required', 'string', 'min:3', 'email', Rule::unique('company')->ignore($company->id ?? null)],
+            'description' => ['required', 'min:3'],
+            'contact_person' => ['required', 'numeric', 'min:3'],
         ], [
             'name.required' => 'Nama Perusahaan tidak boleh kosong',
             'address.required' => 'Alamat tidak boleh kosong',
