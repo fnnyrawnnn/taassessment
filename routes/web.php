@@ -34,7 +34,7 @@ Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::resource('jobTargets', 'JobTargetsController');
 
-//add ongoing
+// add ongoing
 Route::get("/jobTargets/ongoing/{id}", "JobTargetsController@ongoing")->name("ongoing.job");
 Route::patch("/jobTargets/ongoing/add/{id}", "JobTargetsController@addongoing")->name("add.ongoing.job");
 

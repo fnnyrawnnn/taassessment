@@ -63,10 +63,13 @@ class Key_BehaviourController extends AppBaseController
     public function store(CreateKey_BehaviourRequest $request)
     {
         $input = $request->all();
-
-        $keyBehaviour = $this->keyBehaviourRepository->create($input);
-
-        Flash::success('Key  Behaviour saved successfully.');
+        try {
+            $keyBehaviour = $this->keyBehaviourRepository->create($input);
+    
+            Flash::success('Key  Behaviour saved successfully.');
+        } catch (\Exception $e) {
+            Flash::error('Failed to save Key Behaviour. Error: ' . $e->getMessage());
+        }
 
         return redirect(route('competencies.showkey', $keyBehaviour->competency_id));
     }
@@ -133,9 +136,13 @@ class Key_BehaviourController extends AppBaseController
             return redirect(route('competencies.index'));
         }
 
-        $keyBehaviour = $this->keyBehaviourRepository->update($request->all(), $id);
-
-        Flash::success('Key  Behaviour updated successfully.');
+        try {
+            $keyBehaviour = $this->keyBehaviourRepository->update($request->all(), $id);
+    
+            Flash::success('Key  Behaviour updated successfully.');
+        } catch (\Exception $e) {
+            Flash::error('Failed to update Key Behaviour. Error: ' . $e->getMessage());
+        }
 
         return redirect(route('competencies.showkey', $keyBehaviour->competency_id));
     }

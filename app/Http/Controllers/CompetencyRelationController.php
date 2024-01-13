@@ -57,8 +57,8 @@ class CompetencyRelationController extends Controller
 
     public function destroy(Competency_Model $competencyModel, Competency $competency)
     {
-    	$competencyModel->competencies()->detach($competency->id);
+        $competencyModel->competencies()->detach($competency->id);
 
-    	return back();
+        return back();
     }
 }

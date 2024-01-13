@@ -32,7 +32,6 @@ class Key_Behaviour extends Model
         'level',
         'description',
         'competency_id',
-     
     ];
 
     /**

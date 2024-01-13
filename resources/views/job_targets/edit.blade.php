@@ -17,6 +17,8 @@
     <div class="card shadow mb-4">
         <div class="card-body">
         {!! Form::model($jobTargets, ['route' => ['jobTargets.update', $jobTargets->id], 'method' => 'patch']) !!}
+        {!! Form::hidden('assessment_session_id', $jobTargets->assessment_session_id) !!}
+        {!! Form::hidden('team_id', $jobTargets->team_id) !!}
 
         @include('job_targets.fields2')
 

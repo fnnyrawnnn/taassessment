@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateJobTargetsRequest;
 use App\Repositories\JobTargetsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Flash;
+use Laracasts\Flash\Flash;
 use Response;
 use App\Models\Team;
 use App\Models\AssessmentSession;
@@ -156,10 +156,14 @@ class JobTargetsController extends AppBaseController
 
             return redirect(route('jobTargets.index'));
         }
-
-        $jobTargets = $this->jobTargetsRepository->update($request->all(), $id);
-
-        Flash::success('Job Targets updated successfully.');
+    
+        try {
+            $jobTargets->update($request->all());
+    
+            Flash::success('Job Targets updated successfully.');
+        } catch (\Exception $e) {
+            Flash::error('Failed to update Job Targets. Error: ' . $e->getMessage());
+        }
 
         return redirect(route('jobTargets.index'));
     }
@@ -190,17 +194,10 @@ class JobTargetsController extends AppBaseController
         return redirect(route('jobTargets.index'));
     }
 
-        /**
-     * Show the form for editing the specified JobTargets.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-
     public function ongoing($id)
     {
         $jobTargets = $this->jobTargetsRepository->find($id);
+        // dd($jobTargets);
 
         if (empty($jobTargets)) {
             Flash::error('Job Targets not found');
@@ -213,15 +210,7 @@ class JobTargetsController extends AppBaseController
 
         return view('job_targets.addongoing', compact('jobTargets','teams','sessions'));
     }
-
-        /**
-     * Update the specified JobTargets in storage.
-     *
-     * @param int $id
-     * @param UpdateJobTargetsRequest $request
-     *
-     * @return Response
-     */
+    
     public function addongoing($id, UpdateJobTargetsRequest $request)
     {
         $jobTargets = $this->jobTargetsRepository->find($id);
@@ -232,9 +221,13 @@ class JobTargetsController extends AppBaseController
             return redirect(route('jobTargets.index'));
         }
 
-        $jobTargets = $this->jobTargetsRepository->update($request->all(), $id);
-
-        Flash::success('Job Targets updated successfully.');
+        try {
+            $jobTargets->update($request->all());
+    
+            Flash::success('Job Targets updated successfully.');
+        } catch (\Exception $e) {
+            Flash::error('Failed to update Job Targets. Error: ' . $e->getMessage());
+        }
 
         return redirect(route('jobTargets.index'));
     }

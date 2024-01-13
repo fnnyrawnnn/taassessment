@@ -47,6 +47,5 @@ class Job_Target extends Model
     {
         return $this->belongsTo(Competency::class, 'competency_id');
     }
-   
     
 }
