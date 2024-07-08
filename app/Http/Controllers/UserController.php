@@ -170,7 +170,6 @@ class UserController extends AppBaseController
             'email' => ['required', 'string', 'min:3', 'email', Rule::unique('user')->ignore($id ?? null)],
             'name' => ['required', 'string', 'min:3'],
             'username' => ['required', 'string', 'min:3'],
-            'password' => ['required', 'string', 'min:8'],
         ], [
             'employee_id.required' => 'Employee ID tidak boleh kosong',
             'email.required' => 'Email Pegawai tidak boleh kosong',

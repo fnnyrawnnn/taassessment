@@ -36,42 +36,51 @@ class Assessment_SessionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $id = Auth::user()->id;
+        try {
+            $id = Auth::user()->id;
 
-        $role = DB::table("user_role")
-                ->where("user_id", $id)
-                ->select("role_id")
-                ->first();
+            $role = DB::table("user_role")
+                    ->where("user_id", $id)
+                    ->select("role_id")
+                    ->first();
 
-        if($role->role_id == "superadmin" || $role->role_id == "admin" || $role->role_id == "admin_ap")
-        {
-            $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status','assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')->get(); 
+            if($role->role_id == "superadmin" || $role->role_id == "admin" || $role->role_id == "admin_ap")
+            {
+                $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status',
+                'assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')->get(); 
 
-            $company_id = Auth::user()->company_id;
-            if ($company_id == null) {
-                $company = Company::all();
-                $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status','assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')->get(); 
-                $assessment_finished = Assessment_Session::select('status')->where('status','finished')->count();
-                $assessment_notStarted = Assessment_Session::select('status')->where('status','not_started')->count();
-                $assessment_open = Assessment_Session::select('status')->where('status','open')->count();
-                $assessment_all = Assessment_Session::count();
-                $selected = "";
-            } else {
-                $company = Company::where('id', $company_id)->get()->first();
-                $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status','assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')
-                ->where("company_id",$company_id)->get(); 
-                $assessment_finished = Assessment_Session::select('status')->where('status','finished')->where('company_id',$company_id)->count();
-                $assessment_notStarted = Assessment_Session::select('status')->where('status','not_started')->where('company_id',$company_id)->count();
-                $assessment_open = Assessment_Session::select('status')->where('status','open')->where('company_id',$company_id)->count();
-                $assessment_all = Assessment_Session::where('company_id',$company_id)->count();
-                $selected = $company->id;
+                $company_id = Auth::user()->company_id;
+                if ($company_id == null) {
+                    $company = Company::all();
+                    $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status',
+                    'assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')->get(); 
+                    $assessment_finished = Assessment_Session::select('status')->where('status','finished')->count();
+                    $assessment_notStarted = Assessment_Session::select('status')->where('status','not_started')->count();
+                    $assessment_open = Assessment_Session::select('status')->where('status','open')->count();
+                    $assessment_all = Assessment_Session::count();
+                    $selected = "";
+                } else {
+                    $company = Company::where('id', $company_id)->get()->first();
+                    $assessmentSessions = Assessment_Session::join('company', 'assessment_session.company_id', '=', 'company.id')->select('assessment_session.name', 'assessment_session.category', 'assessment_session.status',
+                    'assessment_session.expired','assessment_session.start_date','assessment_session.end_date','company.name as company_name', 'assessment_session.id as id')
+                    ->where("company_id",$company_id)->get(); 
+                    $assessment_finished = Assessment_Session::select('status')->where('status','finished')->where('company_id',$company_id)->count();
+                    $assessment_notStarted = Assessment_Session::select('status')->where('status','not_started')->where('company_id',$company_id)->count();
+                    $assessment_open = Assessment_Session::select('status')->where('status','open')->where('company_id',$company_id)->count();
+                    $assessment_all = Assessment_Session::where('company_id',$company_id)->count();
+                    $selected = $company->id;
+                }
+            
+                return view('assessment__sessions.index', compact("company","selected","assessment_finished","assessment_notStarted","assessment_open","assessment_all"))->with('assessmentSessions', $assessmentSessions);
             }
-        
-            return view('assessment__sessions.index', compact("company","selected","assessment_finished","assessment_notStarted","assessment_open","assessment_all"))->with('assessmentSessions', $assessmentSessions);
-        }
-        else if($role->role_id == "user")
-        {
-            return redirect("assessmentUser");
+            else if($role->role_id == "user")
+            {
+                return redirect("assessmentUser");
+            }
+        } catch (\Exception $e) {
+            Flash::error('Failed to view assessment session. Error: ' . $e->getMessage());
+            
+            return redirect("home");
         }
     }
 
@@ -151,77 +160,83 @@ class Assessment_SessionController extends AppBaseController
      */
     public function show($id)
     {
-        $session = $this->assessmentSessionRepository->find($id);
+        try {
+            $session = $this->assessmentSessionRepository->find($id);
 
-        $models = DB::table("assessment_relation")
-                    ->join("competency_models", "competency_models.id", "=", "assessment_relation.competency_models_id")
-                    ->where("assessment_relation.assessment_session_id", $id)
-                    ->get();
-        
-        $participant = DB::table("assessor_map")
-                        ->where("session_id", $id)
+            $models = DB::table("assessment_relation")
+                        ->join("competency_models", "competency_models.id", "=", "assessment_relation.competency_models_id")
+                        ->where("assessment_relation.assessment_session_id", $id)
                         ->get();
-        
-        $assignment = DB::table("assignment_headers")
-                        ->where("assessment_session_id", $id)
-                        ->get();
-
-        $assesse = [];
-
-        for($i = 0; $i < count($participant); $i++)
-        {
-            array_push($assesse, $participant[$i]->userid_assessee);
-        }
-
-        $assesse = array_unique($assesse);
-        $assesse = array_values($assesse);
-
-        $participants = [];
-
-        for($i = 0; $i < count($assesse); $i++)
-        {   
-            $detail = new stdClass();
-            $detail->id = $assesse[$i];
-
-            $assese = DB::table("user")->where("id", $assesse[$i])->first();
-
-            $detail->name = $assese->name;
-            $detail->email = $assese->email;
-
-            $detail->assessor = [];
             
-            for($j = 0; $j < count($participant); $j++)
+            $participant = DB::table("assessor_map")
+                            ->where("session_id", $id)
+                            ->get();
+            
+            $assignment = DB::table("assignment_headers")
+                            ->where("assessment_session_id", $id)
+                            ->get();
+
+            $assesse = [];
+
+            for($i = 0; $i < count($participant); $i++)
             {
-                if($participant[$j]->userid_assessee == $assesse[$i])
-                {   
-                    $assessor = new stdClass();
-                    $assessor->id = $participant[$j]->userid_assessor;
-                    
-                    $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
-
-                    $assessor->name = $assesor->name ? $assesor->name : '';
-                    $assessor->email = $assesor->email ? $assesor->email : '';
-                    $assessor->status = $participant[$j]->status;
-                    $assessor->relation = $participant[$j]->relation;
-
-                    array_push($detail->assessor, $assessor);
-                }
+                array_push($assesse, $participant[$i]->userid_assessee);
             }
 
-            array_push($participants, $detail);
+            $assesse = array_unique($assesse);
+            $assesse = array_values($assesse);
+
+            $participants = [];
+
+            for($i = 0; $i < count($assesse); $i++)
+            {   
+                $detail = new stdClass();
+                $detail->id = $assesse[$i];
+
+                $assese = DB::table("user")->where("id", $assesse[$i])->first();
+
+                $detail->name = $assese->name;
+                $detail->email = $assese->email;
+
+                $detail->assessor = [];
+                
+                for($j = 0; $j < count($participant); $j++)
+                {
+                    if($participant[$j]->userid_assessee == $assesse[$i])
+                    {   
+                        $assessor = new stdClass();
+                        $assessor->id = $participant[$j]->userid_assessor;
+                        
+                        $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
+
+                        $assessor->name = $assesor->name ? $assesor->name : '';
+                        $assessor->email = $assesor->email ? $assesor->email : '';
+                        $assessor->status = $participant[$j]->status;
+                        $assessor->relation = $participant[$j]->relation;
+
+                        array_push($detail->assessor, $assessor);
+                    }
+                }
+
+                array_push($participants, $detail);
+            }
+
+
+
+            if (empty($session)) {
+                Flash::error('Assessment Session not found');
+
+                return redirect(route('assessmentSessions.index'));
+            }
+
+            
+
+            return view('assessment__sessions.show', compact("session", "models", "participants", "assignment"));
+        } catch (\Exception $e) {
+            Flash::error('Failed to show assessment session. Error: ' . $e->getMessage());
+            
+            return redirect("home");
         }
-
-
-
-        if (empty($session)) {
-            Flash::error('Assessment Session not found');
-
-            return redirect(route('assessmentSessions.index'));
-        }
-
-        
-
-        return view('assessment__sessions.show', compact("session", "models", "participants", "assignment"));
     }
 
     /**
@@ -233,76 +248,82 @@ class Assessment_SessionController extends AppBaseController
      */
     public function edit($id)
     {
-        $assessmentSession = DB::table("assessment_session")
-                            ->where("id", $id)
-                            ->first();
+        try {
+            $assessmentSession = DB::table("assessment_session")
+                                ->where("id", $id)
+                                ->first();
 
-        $assessmentId = $id;
+            $assessmentId = $id;
 
-        $models = DB::table("assessment_relation")
-                    ->join("competency_models", "competency_models.id", "=", "assessment_relation.competency_models_id")
-                    ->where("assessment_session_id", $id)
-                    ->get();
+            $models = DB::table("assessment_relation")
+                        ->join("competency_models", "competency_models.id", "=", "assessment_relation.competency_models_id")
+                        ->where("assessment_session_id", $id)
+                        ->get();
 
-        $participant = DB::table("assessor_map")
-                    ->where("session_id", $id)
-                    ->get();
-    
-        $assesse = [];
+            $participant = DB::table("assessor_map")
+                        ->where("session_id", $id)
+                        ->get();
+        
+            $assesse = [];
 
-        for($i = 0; $i < count($participant); $i++)
-        {
-            array_push($assesse, $participant[$i]->userid_assessee);
-        }
-
-        $assesse = array_unique($assesse);
-
-        $assesse = array_values($assesse);
-
-        $participants = [];
-
-        for($i = 0; $i < count($assesse); $i++)
-        {   
-            $detail = new stdClass();
-            $detail->id = $assesse[$i];
-
-            $assese = DB::table("user")->where("id", $assesse[$i])->first();
-            $detail->name = $assese->name;
-            $detail->email = $assese->email;
-
-            $detail->assessor = [];
-            
-            for($j = 0; $j < count($participant); $j++)
+            for($i = 0; $i < count($participant); $i++)
             {
-                if($participant[$j]->userid_assessee == $assesse[$i])
-                {   
-                    $assessor = new stdClass();
-                    $assessor->id = $participant[$j]->userid_assessor;
-                    
-                    $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
-
-                    $assessor->name = $assesor->name ? $assesor->name : '';
-                    $assessor->email = $assesor->email ? $assesor->email : '';
-                    $assessor->status = $participant[$j]->status;
-                    $assessor->relation = $participant[$j]->relation;
-                    $assessor->assessor_map = $participant[$j]->id;
-
-                    array_push($detail->assessor, $assessor);
-                }
+                array_push($assesse, $participant[$i]->userid_assessee);
             }
 
-            array_push($participants, $detail);
-        }
-        $user_company = Auth::user()->company_id;
-        if ($user_company == null) {
-            $modelss = CompetencyModels::All();
-            $id = DB::table('user')->select("employee_id")->get();
-        } else {
-            $modelss = CompetencyModels::where('company_id', $user_company)->get();
-            $id = DB::table('user')->select("employee_id")->where('company_id', $user_company)->get();
-        }
+            $assesse = array_unique($assesse);
 
-        return view('assessment__sessions.edit', compact("assessmentSession", "models", "participants", "modelss", "id", "assessmentId"));
+            $assesse = array_values($assesse);
+
+            $participants = [];
+
+            for($i = 0; $i < count($assesse); $i++)
+            {   
+                $detail = new stdClass();
+                $detail->id = $assesse[$i];
+
+                $assese = DB::table("user")->where("id", $assesse[$i])->first();
+                $detail->name = $assese->name;
+                $detail->email = $assese->email;
+
+                $detail->assessor = [];
+                
+                for($j = 0; $j < count($participant); $j++)
+                {
+                    if($participant[$j]->userid_assessee == $assesse[$i])
+                    {   
+                        $assessor = new stdClass();
+                        $assessor->id = $participant[$j]->userid_assessor;
+                        
+                        $assesor = DB::table("user")->where("id", $participant[$j]->userid_assessor)->first();
+
+                        $assessor->name = $assesor->name ? $assesor->name : '';
+                        $assessor->email = $assesor->email ? $assesor->email : '';
+                        $assessor->status = $participant[$j]->status;
+                        $assessor->relation = $participant[$j]->relation;
+                        $assessor->assessor_map = $participant[$j]->id;
+
+                        array_push($detail->assessor, $assessor);
+                    }
+                }
+
+                array_push($participants, $detail);
+            }
+            $user_company = Auth::user()->company_id;
+            if ($user_company == null) {
+                $modelss = CompetencyModels::All();
+                $id = DB::table('user')->select("employee_id")->get();
+            } else {
+                $modelss = CompetencyModels::where('company_id', $user_company)->get();
+                $id = DB::table('user')->select("employee_id")->where('company_id', $user_company)->get();
+            }
+
+            return view('assessment__sessions.edit', compact("assessmentSession", "models", "participants", "modelss", "id", "assessmentId"));
+        } catch (\Exception $e) {
+            Flash::error('Failed to show edit assessment session. Error: ' . $e->getMessage());
+            
+            return redirect("home");
+        }
     }
 
     
