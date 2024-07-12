@@ -103,6 +103,7 @@
         <!-- ======= About Section ======= -->
         <section id="about" class="about">
             <div class="container" data-aos="fade-up">
+                @include('flash::message')
                 <div class="section-title">
                     <h2>Tentang Kami</h2>
                     <p></p>
