@@ -284,28 +284,18 @@
         $(document).ready(function () {
 
             var dataParticipant = [];
-            var method = {
-                !!json_encode($method) !!
-            };
+            var method = {!! json_encode($method) !!};
 
             // TODO: Refactor the logic on below condition to be same as in the controller
             if (method == "Manual") {
-                var assessor = {
-                    !!json_encode($assessor) !!
-                };
-                var assesse = {
-                    !!json_encode($assesse) !!
-                };
+                var assessor = {!! json_encode($assessor) !!};
+                var assesse = {!! json_encode($assesse) !!};
 
                 var assessor1 = {
                     name: assessor.name,
                     email: assessor.email,
-                    relation: {
-                        !!json_encode($relation) !!
-                    },
-                    status: {
-                        !!json_encode($status) !!
-                    }
+                    relation: {!! json_encode($relation) !!},
+                    status: {!! json_encode($status) !!}
                 }
 
                 var detail = {
@@ -318,9 +308,7 @@
 
                 dataParticipant.push(detail);
             } else if (method == "Upload") {
-                var participants = {
-                    !!json_encode($participants) !!
-                }
+                var participants = {!! json_encode($participants) !!}
 
                 for (var i = 0; i < participants.length; i++) {
                     var assesse = {

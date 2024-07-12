@@ -264,22 +264,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var models = {
-                !!json_encode($models) !!
-            };
+            var models = {!! json_encode($models) !!};
             var add_models = [];
-            var participants = {
-                !!json_encode($participants) !!
-            };
+            var participants = {!! json_encode($participants) !!};
             var add_participants = [];
             var deleted_participants = [];
             var deleted_models = [];
-            var assessmentId = {
-                !!json_encode($assessmentId) !!
-            };
-            var assessmentSession = {
-                !!json_encode($assessmentSession) !!
-            };
+            var assessmentId = {!! json_encode($assessmentId) !!};
+            var assessmentSession = {!! json_encode($assessmentSession) !!};
             var assessment = {};
 
             assessment.status = "";

@@ -97,9 +97,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var questions = {
-            !!json_encode($questionss) !!
-        };
+        var questions = {!! json_encode($questionss) !!};
         var curr_page = 1;
         var prev_page = 1;
         var radios = $("input[type='radio']");

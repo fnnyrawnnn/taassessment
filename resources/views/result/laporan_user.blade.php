@@ -70,20 +70,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var result = {
-            !!json_encode($result) !!
-        };
-        var group = {
-            !!json_encode($group) !!
-        };
+        var result = {!! json_encode($result) !!};
+        var group = {!! json_encode($group) !!};
 
         var labels = [];
         var value = [];
         var bg = [];
 
-        var jobs = {
-            !!json_encode($jobs) !!
-        }
+        var jobs = {!! json_encode($jobs) !!}
 
         var labels_spider = [];
         var value1_spider = [];

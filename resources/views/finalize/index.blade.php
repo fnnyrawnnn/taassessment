@@ -284,15 +284,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            var assessmentSession = {
-                !!json_encode($session) !!
-            };
-            var competencyModel = {
-                !!json_encode($competency) !!
-            };
-            var dataParticipant = {
-                !!json_encode($participants) !!
-            }
+            var assessmentSession = {!! json_encode($session) !!};
+            var competencyModel = {!! json_encode($competency) !!};
+            var dataParticipant = {!! json_encode($participants) !!}
 
             $("#addModel").on("click", function () {
 
