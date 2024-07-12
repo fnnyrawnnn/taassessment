@@ -45,12 +45,12 @@ class ManageJobTargetTest extends DuskTestCase
                 ->type('job_name', 'System Analyst')
                 ->type('job_code', 'SANL')
                 ->press('Save')
-                // ->pause(1000)
-                // ->whenAvailable('table', function ($table) {
-                //     $table->assertSee('System Analyst')
-                //     ->click('form .btn-group .btn-xs:nth-child(5)');
-                // })
-                // ->acceptDialog()
+                ->pause(1000)
+                ->whenAvailable('table', function ($table) {
+                    $table->assertSee('System Analyst')
+                    ->click('form .btn-group .btn-xs:nth-child(5)');
+                })
+                ->acceptDialog()
                 ->pause(2000)
                 ;
         });

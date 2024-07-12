@@ -47,11 +47,11 @@ class ManageCompetencyTest extends DuskTestCase
                 ->type('name', 'Willingness to learn')
                 ->press('Save')
                 ->pause(1000)
-                // ->whenAvailable('table', function ($table) {
-                //     $table->assertSee('Willingness to learn')
-                //     ->click('form .btn-group .btn:nth-child(4)');
-                // })
-                // ->acceptDialog()
+                ->whenAvailable('table', function ($table) {
+                    $table->assertSee('Willingness to learn')
+                    ->click('form .btn-group .btn:nth-child(4)');
+                })
+                ->acceptDialog()
                 ->pause(2000)
                 ;
         });

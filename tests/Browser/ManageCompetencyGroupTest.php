@@ -43,12 +43,12 @@ class ManageCompetencyGroupTest extends DuskTestCase
                 })
                 ->type('name', 'Komunikasi')
                 ->press('Save')
-                // ->pause(1000)
-                // ->whenAvailable('table', function ($table) {
-                //     $table->assertSee('Komunikasi')
-                //     ->click('form .btn-group .btn:nth-child(3)');
-                // })
-                // ->acceptDialog()
+                ->pause(1000)
+                ->whenAvailable('table', function ($table) {
+                    $table->assertSee('Komunikasi')
+                    ->click('form .btn-group .btn:nth-child(3)');
+                })
+                ->acceptDialog()
                 ->pause(2000)
                 ;
         });

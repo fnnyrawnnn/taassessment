@@ -44,11 +44,11 @@ class ManageCompetencyModelTest extends DuskTestCase
                 ->type('name', 'Model Software Development')
                 ->press('Save')
                 ->pause(1000)
-                // ->whenAvailable('table', function ($table) {
-                //     $table->assertSee('Model Software Development')
-                //     ->click('form .btn-group .btn:nth-child(4)');
-                // })
-                // ->acceptDialog()
+                ->whenAvailable('table', function ($table) {
+                    $table->assertSee('Model Software Development')
+                    ->click('form .btn-group .btn:nth-child(4)');
+                })
+                ->acceptDialog()
                 ->pause(2000)
                 ;
         });
